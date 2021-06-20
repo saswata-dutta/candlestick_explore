@@ -2,18 +2,12 @@ import sys
 import pandas as pd
 from downloader import yfinance_fetch
 import candlestick_patterns
-from retrying import retry
 
 
 TICKER_SUFFIX = ".NS"
 
 
-@retry(
-    stop_max_attempt_number=5,
-    wait_exponential_multiplier=200,
-    wait_exponential_max=10000,
-)
-def process(ticker):
+def process(ticker, start, end):
     print(f"Downloading {ticker} ...")
     df = yfinance_fetch(ticker, start, end)
 
@@ -28,7 +22,7 @@ def main(company_file, start, end):
     companies_data = []
     for symbol, industry in zip(companies["SYMBOL"], companies["INDUSTRY"]):
         try:
-            df = process(symbol + TICKER_SUFFIX)
+            df = process(symbol + TICKER_SUFFIX, start, end)
         except Exception as e:
             print(f"Failed to process {symbol} !")
             print(e)
