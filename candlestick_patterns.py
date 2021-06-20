@@ -12,7 +12,9 @@ def detect(df):
     return df
 
 
-def find_days(df, pattern, condition):
-    df[pattern] = abstract.Function(pattern)(df)
+def find_days(df, patterns, condition):
+    for pattern in patterns:
+        df[pattern] = abstract.Function(pattern)(df)
+
     days = (d.date() for d in df.query(condition).index)
     return days

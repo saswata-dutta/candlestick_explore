@@ -43,21 +43,21 @@ def plot(df, days, title):
     fig.write_html(f"plot_{title}.html")
 
 
-def main(ticker, start, end, pattern, condition):
+def main(ticker, start, end, patterns, condition):
     df = process(ticker, start, end)
-    days = candlestick_patterns.find_days(df, pattern, condition)
+    days = candlestick_patterns.find_days(df, patterns, condition)
 
-    title = f"{ticker}_{start}_{end}_{pattern}"
+    title = f"{ticker}_{start}_{end}_{'-'.join(patterns)}"
     plot(df, days, title)
 
 
 if __name__ == "__main__":
-    ticker, start, end, pattern, condition = sys.argv[1:]
+    ticker, start, end, patterns, condition = sys.argv[1:]
     # (
     #     "SPY",
     #     "2020-03-01",
     #     "2020-04-25",
-    #     "CDLMORNINGSTAR",
-    #     "CDLMORNINGSTAR > 0",
+    #     "CDLMORNINGSTAR CDLENGULFING",
+    #     "CDLENGULFING > 0 or CDLMORNINGSTAR > 0",
     # )
-    main(ticker, start, end, pattern, condition)
+    main(ticker, start, end, patterns.split(), condition)
